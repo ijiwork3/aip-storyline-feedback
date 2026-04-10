@@ -209,11 +209,48 @@
       background: rgba(255,255,255,0.7);
       border: 1px solid #e2e8f0;
       border-radius: 12px;
-      padding: 12px 14px;
+      padding: 12px 14px 0 14px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.06);
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
+    }
+    /* 칩 + 전송 버튼을 한 행에 묶는 래퍼 */
+    .feedback-chips-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      padding-bottom: 12px;
+    }
+    /* 왼쪽 컬럼: 칩 + 직접입력, 세로 방향 */
+    .feedback-left-col {
+      flex: 1 1 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      min-width: 0;
+    }
+    /* 칩 영역: wrap */
+    .feedback-chips-area {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    /* upReasons / downReasons: 숨길 땐 none, 보일 땐 contents (박스 없이 자식만 노출) */
+    #upReasons,
+    #downReasons {
+      display: contents;
+    }
+    #upReasons.hidden,
+    #downReasons.hidden {
+      display: none;
+    }
+    /* 전송 버튼 컨테이너: 56px 고정, 절대 줄어들지 않음 */
+    .feedback-send-col {
+      flex: 0 0 56px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
     }
 
     /* 이유 선택 칩 — 길어지면 wrap */
@@ -508,38 +545,50 @@
           <div id="feedbackPanel" class="feedback-panel">
             <div class="feedback-panel-inner">
 
-              <!-- 좋아요 이유 칩 -->
-              <div id="upReasons" class="flex flex-wrap gap-1.5 hidden">
-                <button class="reason-chip" onclick="toggleReasonChip(this)">도입-전개-결론 흐름이 딱 맞아요</button>
-                <button class="reason-chip" onclick="toggleReasonChip(this)">핵심 메시지가 명확하게 담겼어요</button>
-                <button class="reason-chip" onclick="toggleReasonChip(this)">페이지 수와 구성이 적절해요</button>
-                <button class="reason-chip" onclick="toggleReasonChip(this)">청중 눈높이에 딱 맞아요</button>
-                <button class="reason-chip" onclick="toggleReasonChip(this)">각 페이지 내용량이 적절해요</button>
-                <button class="reason-chip" id="upDirectInput" onclick="toggleDirectInput(this)">직접 입력</button>
-              </div>
+              <!-- 왼쪽(칩+직접입력) + 오른쪽(전송) -->
+              <div class="feedback-chips-row">
 
-              <!-- 싫어요 이유 칩 -->
-              <div id="downReasons" class="flex flex-wrap gap-1.5 hidden">
-                <button class="reason-chip" onclick="toggleReasonChip(this)">페이지 순서가 어색해요</button>
-                <button class="reason-chip" onclick="toggleReasonChip(this)">말하고 싶은 핵심이 빠졌어요</button>
-                <button class="reason-chip" onclick="toggleReasonChip(this)">페이지 수가 맞지 않아요</button>
-                <button class="reason-chip" onclick="toggleReasonChip(this)">청중 눈높이가 안 맞아요</button>
-                <button class="reason-chip" onclick="toggleReasonChip(this)">내용이 너무 많거나 적어요</button>
-                <button class="reason-chip" id="downDirectInput" onclick="toggleDirectInput(this)">직접 입력</button>
-              </div>
+                <!-- 왼쪽: 칩들 + 직접입력 필드 (flex-col) -->
+                <div class="feedback-left-col">
 
-              <!-- 직접 입력 필드 (직접입력 칩 클릭 시만) -->
-              <div id="directInputWrap" style="max-height:0; overflow:hidden; transition: max-height 0.2s ease, margin-top 0.2s ease; margin-top:0;">
-                <textarea id="feedbackText" class="feedback-textarea" rows="2"
-                  placeholder="직접 입력해주세요 (선택)"></textarea>
-              </div>
+                  <!-- 칩 영역 (wrap) -->
+                  <div class="feedback-chips-area">
+                    <!-- 좋아요 이유 칩 -->
+                    <div id="upReasons" class="hidden">
+                      <button class="reason-chip" onclick="toggleReasonChip(this)">도입-전개-결론 흐름이 딱 맞아요</button>
+                      <button class="reason-chip" onclick="toggleReasonChip(this)">핵심 메시지가 명확하게 담겼어요</button>
+                      <button class="reason-chip" onclick="toggleReasonChip(this)">페이지 수와 구성이 적절해요</button>
+                      <button class="reason-chip" onclick="toggleReasonChip(this)">청중 눈높이에 딱 맞아요</button>
+                      <button class="reason-chip" onclick="toggleReasonChip(this)">각 페이지 내용량이 적절해요</button>
+                      <button class="reason-chip" id="upDirectInput" onclick="toggleDirectInput(this)">직접 입력</button>
+                    </div>
+                    <!-- 싫어요 이유 칩 -->
+                    <div id="downReasons" class="hidden">
+                      <button class="reason-chip" onclick="toggleReasonChip(this)">페이지 순서가 어색해요</button>
+                      <button class="reason-chip" onclick="toggleReasonChip(this)">말하고 싶은 핵심이 빠졌어요</button>
+                      <button class="reason-chip" onclick="toggleReasonChip(this)">페이지 수가 맞지 않아요</button>
+                      <button class="reason-chip" onclick="toggleReasonChip(this)">청중 눈높이가 안 맞아요</button>
+                      <button class="reason-chip" onclick="toggleReasonChip(this)">내용이 너무 많거나 적어요</button>
+                      <button class="reason-chip" id="downDirectInput" onclick="toggleDirectInput(this)">직접 입력</button>
+                    </div>
+                  </div>
 
-              <!-- 전송 버튼 — 항상 패널 내 하단 우측 -->
-              <div class="flex justify-end">
-                <button onclick="submitSLFeedback()"
-                  class="text-xs font-semibold px-4 h-8 rounded-full flex-shrink-0 transition-colors"
-                  style="background:#374151; color:white;">전송</button>
-              </div>
+                  <!-- 직접 입력 필드 (직접입력 칩 클릭 시만) -->
+                  <div id="directInputWrap" style="max-height:0; overflow:hidden; transition: max-height 0.2s ease, margin-top 0.2s ease; margin-top:0;">
+                    <textarea id="feedbackText" class="feedback-textarea" rows="2"
+                      placeholder="직접 입력해주세요 (선택)"></textarea>
+                  </div>
+
+                </div><!-- /feedback-left-col -->
+
+                <!-- 전송 버튼 — 오른쪽 고정, 항상 하단 -->
+                <div class="feedback-send-col">
+                  <button onclick="submitSLFeedback()"
+                    class="text-xs font-semibold px-4 h-8 rounded-full flex-shrink-0 transition-colors"
+                    style="background:#374151; color:white;">전송</button>
+                </div>
+
+              </div><!-- /feedback-chips-row -->
 
             </div>
           </div>
@@ -731,7 +780,7 @@
       const wrap = document.getElementById('directInputWrap');
       if (chip.classList.contains('selected')) {
         wrap.style.maxHeight = '80px';
-        wrap.style.marginTop = '4px';
+        wrap.style.marginTop = '8px';
         setTimeout(() => document.getElementById('feedbackText').focus(), 200);
       } else {
         wrap.style.maxHeight = '0';
