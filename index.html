@@ -861,13 +861,15 @@
       clearTimeout(sb._timer);
       sb._timer = setTimeout(() => sb.classList.remove('show'), 5000);
 
-      // 좋아요/싫어요 버튼 프리즈
+      // 좋아요/싫어요 버튼 비활성화 (버튼만, 스크롤 영향 없음)
       const upBtn   = document.getElementById('slThumbUp');
       const downBtn = document.getElementById('slThumbDown');
-      upBtn.disabled   = true;
-      downBtn.disabled = true;
       upBtn.style.pointerEvents   = 'none';
       downBtn.style.pointerEvents = 'none';
+      upBtn.style.opacity   = '0.35';
+      downBtn.style.opacity = '0.35';
+      upBtn.style.cursor    = 'default';
+      downBtn.style.cursor  = 'default';
     }
 
     /* ──────────────────────────────────
