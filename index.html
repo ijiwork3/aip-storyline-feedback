@@ -781,7 +781,11 @@
       if (chip.classList.contains('selected')) {
         wrap.style.maxHeight = '80px';
         wrap.style.marginTop = '8px';
-        setTimeout(() => document.getElementById('feedbackText').focus(), 200);
+        setTimeout(() => {
+          const ta = document.getElementById('feedbackText');
+          ta.focus();
+          ta.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 300);
       } else {
         wrap.style.maxHeight = '0';
         wrap.style.marginTop = '0';
@@ -851,6 +855,18 @@
       wrap.style.maxHeight = '0';
       wrap.style.marginTop = '0';
       console.log('[SL 피드백] 초기화');
+    }
+
+    /* ──────────────────────────────────
+       태블릿 키보드 올라올 때 입력 필드 스크롤
+    ────────────────────────────────── */
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', () => {
+        const ta = document.getElementById('feedbackText');
+        if (document.activeElement === ta) {
+          setTimeout(() => ta.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+        }
+      });
     }
 
     /* ──────────────────────────────────
