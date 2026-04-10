@@ -139,17 +139,18 @@
     .bubble-thumb-btn {
       width: 28px; height: 28px;
       border-radius: 999px;
-      border: 1px solid #d1d5db;
+      border: none;
       background: transparent;
       cursor: pointer;
       color: #9ca3af;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: border-color 0.15s, color 0.15s;
+      transition: color 0.15s;
+      padding: 0;
     }
-    .bubble-thumb-btn:hover { border-color: #c4b5fd; color: #7c3aed; }
-    .bubble-thumb-btn.active { border-color: #7c3aed; color: #7c3aed; }
+    .bubble-thumb-btn:hover { color: #374151; }
+    .bubble-thumb-btn.active { color: #111827; }
     .bubble-thumb-btn svg { width: 13px; height: 13px; }
 
     /* 패널 업데이트 대기 애니메이션 */
@@ -171,22 +172,23 @@
 
     /* ── 스토리라인 카드 피드백 ── */
 
-    /* 고스트 버튼 (아이콘만, 글자 없음) */
+    /* 고스트 버튼 (아이콘만, 글자 없음, 라인 없음) */
     .sl-thumb-btn {
       width: 32px; height: 32px;
       border-radius: 999px;
-      border: 1px solid #d1d5db;
+      border: none;
       background: transparent;
       color: #9ca3af;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: border-color 0.15s, color 0.15s, opacity 0.15s;
+      transition: color 0.15s, opacity 0.15s;
       flex-shrink: 0;
+      padding: 0;
     }
-    .sl-thumb-btn:hover:not(:disabled) { border-color: #c4b5fd; color: #7c3aed; }
-    .sl-thumb-btn.active { border-color: #7c3aed; color: #7c3aed; }
+    .sl-thumb-btn:hover:not(:disabled) { color: #374151; }
+    .sl-thumb-btn.active { color: #111827; }
     .sl-thumb-btn:disabled { opacity: 0.4; cursor: default; pointer-events: none; }
     .sl-thumb-btn svg { width: 14px; height: 14px; }
 
@@ -487,11 +489,11 @@
               </button>
             </div>
 
-            <!-- 우: 전송(패널 열릴 때만 노출) + CTA -->
+            <!-- 우: 전송(직접입력 없을 때, 패널 열릴 때만) + CTA -->
             <div class="flex items-center gap-2 shrink-0">
               <button id="submitFeedbackBtn" onclick="submitSLFeedback()"
-                class="text-xs font-semibold text-white px-4 h-9 rounded-full transition-all"
-                style="background:#7c3aed; display:none;">전송</button>
+                class="text-xs font-semibold px-4 h-9 rounded-full transition-all"
+                style="background:#374151; color:white; display:none;">전송</button>
               <button id="ctaBtn"
                 class="flex items-center gap-1.5 text-white text-sm font-semibold rounded-full px-5 h-9 transition-colors flex-shrink-0"
                 style="background:#1a1729"
@@ -529,10 +531,15 @@
                 <button class="reason-chip" id="downDirectInput" onclick="toggleDirectInput(this)">직접 입력</button>
               </div>
 
-              <!-- 자유입력 (직접 입력 칩 클릭 시만 노출) -->
+              <!-- 직접 입력 필드 + 전송 버튼 (같은 행, 필드 침범 없음) -->
               <div id="directInputWrap" style="max-height:0; overflow:hidden; transition: max-height 0.2s ease, margin-top 0.2s ease; margin-top:0;">
-                <textarea id="feedbackText" class="feedback-textarea" rows="2"
-                  placeholder="직접 입력해주세요 (선택)"></textarea>
+                <div class="flex items-start gap-2">
+                  <textarea id="feedbackText" class="feedback-textarea flex-1" rows="2"
+                    placeholder="직접 입력해주세요 (선택)"></textarea>
+                  <button onclick="submitSLFeedback()"
+                    class="text-xs font-semibold px-3 h-8 rounded-full flex-shrink-0 self-end transition-colors"
+                    style="background:#374151; color:white; margin-bottom:1px;">전송</button>
+                </div>
               </div>
 
             </div>
@@ -730,15 +737,18 @@
 
     function toggleDirectInput(chip) {
       chip.classList.toggle('selected');
-      const wrap = document.getElementById('directInputWrap');
+      const wrap    = document.getElementById('directInputWrap');
+      const topBtn  = document.getElementById('submitFeedbackBtn');
       if (chip.classList.contains('selected')) {
         wrap.style.maxHeight = '80px';
         wrap.style.marginTop = '4px';
+        topBtn.style.display = 'none'; // 직접입력 행의 전송버튼으로 대체
         setTimeout(() => document.getElementById('feedbackText').focus(), 200);
       } else {
         wrap.style.maxHeight = '0';
         wrap.style.marginTop = '0';
         document.getElementById('feedbackText').value = '';
+        topBtn.style.display = 'inline-flex'; // 다시 상단 전송버튼 노출
       }
     }
 
