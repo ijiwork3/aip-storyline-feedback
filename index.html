@@ -489,11 +489,8 @@
               </button>
             </div>
 
-            <!-- 우: 전송(직접입력 없을 때, 패널 열릴 때만) + CTA -->
+            <!-- 우: CTA -->
             <div class="flex items-center gap-2 shrink-0">
-              <button id="submitFeedbackBtn" onclick="submitSLFeedback()"
-                class="text-xs font-semibold px-4 h-9 rounded-full transition-all"
-                style="background:#374151; color:white; display:none;">전송</button>
               <button id="ctaBtn"
                 class="flex items-center gap-1.5 text-white text-sm font-semibold rounded-full px-5 h-9 transition-colors flex-shrink-0"
                 style="background:#1a1729"
@@ -531,15 +528,17 @@
                 <button class="reason-chip" id="downDirectInput" onclick="toggleDirectInput(this)">직접 입력</button>
               </div>
 
-              <!-- 직접 입력 필드 + 전송 버튼 (같은 행, 필드 침범 없음) -->
+              <!-- 직접 입력 필드 (직접입력 칩 클릭 시만) -->
               <div id="directInputWrap" style="max-height:0; overflow:hidden; transition: max-height 0.2s ease, margin-top 0.2s ease; margin-top:0;">
-                <div class="flex items-start gap-2">
-                  <textarea id="feedbackText" class="feedback-textarea flex-1" rows="2"
-                    placeholder="직접 입력해주세요 (선택)"></textarea>
-                  <button onclick="submitSLFeedback()"
-                    class="text-xs font-semibold px-3 h-8 rounded-full flex-shrink-0 self-end transition-colors"
-                    style="background:#374151; color:white; margin-bottom:1px;">전송</button>
-                </div>
+                <textarea id="feedbackText" class="feedback-textarea" rows="2"
+                  placeholder="직접 입력해주세요 (선택)"></textarea>
+              </div>
+
+              <!-- 전송 버튼 — 항상 패널 내 하단 우측 -->
+              <div class="flex justify-end">
+                <button onclick="submitSLFeedback()"
+                  class="text-xs font-semibold px-4 h-8 rounded-full flex-shrink-0 transition-colors"
+                  style="background:#374151; color:white;">전송</button>
               </div>
 
             </div>
@@ -699,12 +698,10 @@
       const textarea    = document.getElementById('feedbackText');
 
       if (slState === type) {
-        // 재클릭 → 닫기
         slState = null;
         upBtn.classList.remove('active');
         downBtn.classList.remove('active');
         panel.classList.remove('open');
-        document.getElementById('submitFeedbackBtn').style.display = 'none';
         console.log('[SL 피드백] 취소');
         return;
       }
@@ -713,21 +710,15 @@
       upBtn.classList.toggle('active',   type === 'up');
       downBtn.classList.toggle('active', type === 'down');
 
-      // 이유 칩 전환 (기존 선택 해제)
       document.querySelectorAll('.reason-chip').forEach(c => c.classList.remove('selected'));
       upReasons.classList.toggle('hidden',   type !== 'up');
       downReasons.classList.toggle('hidden', type !== 'down');
 
-      // 텍스트 placeholder 변경
       textarea.placeholder = type === 'up'
         ? '좋았던 점을 자세히 알려주세요 (선택)'
         : '아쉬웠던 점을 자세히 알려주세요 (선택)';
 
       panel.classList.add('open');
-
-      // 전송 버튼 노출
-      document.getElementById('submitFeedbackBtn').style.display = 'inline-flex';
-
       console.log(`[SL 피드백] type=${type}`);
     }
 
@@ -737,18 +728,15 @@
 
     function toggleDirectInput(chip) {
       chip.classList.toggle('selected');
-      const wrap    = document.getElementById('directInputWrap');
-      const topBtn  = document.getElementById('submitFeedbackBtn');
+      const wrap = document.getElementById('directInputWrap');
       if (chip.classList.contains('selected')) {
         wrap.style.maxHeight = '80px';
         wrap.style.marginTop = '4px';
-        topBtn.style.display = 'none'; // 직접입력 행의 전송버튼으로 대체
         setTimeout(() => document.getElementById('feedbackText').focus(), 200);
       } else {
         wrap.style.maxHeight = '0';
         wrap.style.marginTop = '0';
         document.getElementById('feedbackText').value = '';
-        topBtn.style.display = 'inline-flex'; // 다시 상단 전송버튼 노출
       }
     }
 
@@ -780,7 +768,6 @@
 
       // 패널 닫기
       document.getElementById('feedbackPanel').classList.remove('open');
-      document.getElementById('submitFeedbackBtn').style.display = 'none';
 
       const selected = [...document.querySelectorAll('.reason-chip.selected')].map(c => c.textContent.trim());
       const text = document.getElementById('feedbackText').value.trim();
