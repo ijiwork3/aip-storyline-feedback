@@ -300,9 +300,9 @@
     /* 스낵바 */
     .snackbar {
       position: fixed;
-      bottom: 32px;
+      top: 48px;
       left: 50%;
-      transform: translateX(-50%) translateY(16px);
+      transform: translateX(-50%) translateY(-8px);
       background: #1f2937;
       color: white;
       font-size: 14px;
@@ -860,6 +860,14 @@
       sb.classList.add('show');
       clearTimeout(sb._timer);
       sb._timer = setTimeout(() => sb.classList.remove('show'), 5000);
+
+      // 좋아요/싫어요 버튼 프리즈
+      const upBtn   = document.getElementById('slThumbUp');
+      const downBtn = document.getElementById('slThumbDown');
+      upBtn.disabled   = true;
+      downBtn.disabled = true;
+      upBtn.style.pointerEvents   = 'none';
+      downBtn.style.pointerEvents = 'none';
     }
 
     /* ──────────────────────────────────
