@@ -296,6 +296,33 @@
     }
     .feedback-textarea:focus { border-color: #c4b5fd; }
     .feedback-textarea::placeholder { color: #9ca3af; }
+
+    /* 스낵바 */
+    .snackbar {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%) translateY(16px);
+      background: #1f2937;
+      color: white;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 12px 20px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+      opacity: 0;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      pointer-events: none;
+      white-space: nowrap;
+      z-index: 9999;
+    }
+    .snackbar.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
   </style>
 </head>
 
@@ -825,6 +852,14 @@
       const selected = [...document.querySelectorAll('.reason-chip.selected')].map(c => c.textContent.trim());
       const text = document.getElementById('feedbackText').value.trim();
       console.log(`[SL 피드백 전송] type=${slState} | 선택지=${JSON.stringify(selected)} | 직접입력="${text}"`);
+      showSnackbar();
+    }
+
+    function showSnackbar() {
+      const sb = document.getElementById('snackbar');
+      sb.classList.add('show');
+      clearTimeout(sb._timer);
+      sb._timer = setTimeout(() => sb.classList.remove('show'), 5000);
     }
 
     /* ──────────────────────────────────
@@ -980,6 +1015,15 @@
       if (e.key === 'Enter') { e.preventDefault(); handleSendMessage(); }
     });
   </script>
+
+  <!-- 스낵바 -->
+  <div id="snackbar" class="snackbar">
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+      <circle cx="10" cy="10" r="10" fill="#34d399"/>
+      <path d="M5.5 10.5l3 3 6-6" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    평가해 주셔서 감사합니다.
+  </div>
 
 </body>
 </html>
